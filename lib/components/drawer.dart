@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pantrychef/screens/favorites.dart';
+import 'package:pantrychef/screens/home.dart';
 import 'package:pantrychef/screens/login.dart';
 
 const Color primaryColor = Colors.redAccent; // Appetizing red
@@ -35,9 +36,19 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
           ),
+             ListTile(
+              onTap: () {
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home()));
+
+              },
+            title: Text('Home'),
+            leading: Icon(Icons.home, color: primaryColor),
+         
+          ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Favorites()));
+                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Favorites()));
+
             },
             title: Text('Favorites'),
             leading: Icon(Icons.favorite, color: primaryColor),

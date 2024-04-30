@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 
         useMaterial3: true,
       ),
-      home: Home(),
+      home: Login(),
       builder: EasyLoading.init(),
     );
   }

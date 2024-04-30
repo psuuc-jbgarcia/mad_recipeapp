@@ -32,6 +32,8 @@ class _HomeState extends State<Home> {
     var response = await http.get(Uri.parse(url));
     Map json = jsonDecode(response.body);
     print(response.body);
+    //array hits
+    //Each object within the hits array contains a recipe
     json['hits'].forEach((e) {
       Recipe model = Recipe(
           url: e['recipe']['url'],
@@ -44,44 +46,48 @@ class _HomeState extends State<Home> {
     });
   }
 
-Future<void> addToFavorites(String url, String label, String source, String image) async {
-  try {
+  Future<void> addToFavorites(
+      String url, String label, String source, String image) async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection('favorites')
-        .doc(userId)
-        .set({
+    await FirebaseFirestore.instance.collection('favorites').doc(userId).set(
+        {
           url: {
+            'url':url,
             'label': label,
             'source': source,
             'image': image,
             'timestamp': FieldValue.serverTimestamp(),
           }
-        }, SetOptions(merge: true)); 
-        setState(() {
-          
-        });
-  } catch (e) {
-    print('Error adding to favorites: $e');
-  }
-}
-
-
-Future<bool> isFavorite(String url) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final querySnapshot = await FirebaseFirestore.instance
-      .collection('favorites')
-      .doc(userId)
-      .get();
-
-  if (querySnapshot.exists) {
-    final data = querySnapshot.data()!;
-    return data.containsKey(url);
+        },
+        SetOptions(
+            merge:
+                true)); // Use merge option to avoid overwriting existing data
+    setState(() {});
   }
 
-  return false;
-}
-
+  Future<bool> isFavorite(String url) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(userId)
+        .get();
+    if (querySnapshot.exists) {
+      final data = querySnapshot.data()!;
+      return data.containsKey(url);
+    }
+    return false;
+  }
+   Widget _buildImage(String imageUrl) {
+    return Image.network(
+      imageUrl,
+      width: 80,
+      height: 80,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Placeholder(); // Placeholder widget to show when image fails to load
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -114,7 +120,7 @@ Future<bool> isFavorite(String url) async {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
                   onChanged: (value) {
-                      search = value;
+                    search = value;
                   },
                   decoration: InputDecoration(
                     hintText: "Search For Recipe",
@@ -183,10 +189,7 @@ Future<bool> isFavorite(String url) async {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(10)),
-                                        child: Image.network(
-                                          x.image.toString(),
-                                          fit: BoxFit.cover,
-                                        ),
+                                        child: _buildImage(x.image.toString()),
                                       ),
                                     ),
                                     Expanded(

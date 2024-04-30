@@ -38,43 +38,48 @@ class _SearchState extends State<Search> {
       });
     });
   }
-Future<void> addToFavorites(String url, String label, String source, String image) async {
-  try {
+Future<void> addToFavorites(
+      String url, String label, String source, String image) async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection('favorites')
-        .doc(userId)
-        .set({
+    await FirebaseFirestore.instance.collection('favorites').doc(userId).set(
+        {
           url: {
+            'url':url,
             'label': label,
             'source': source,
             'image': image,
             'timestamp': FieldValue.serverTimestamp(),
           }
-        }, SetOptions(merge: true)); 
-        setState(() {
-          
-        });
-  } catch (e) {
-    print('Error adding to favorites: $e');
-  }
-}
-
-
-Future<bool> isFavorite(String url) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final querySnapshot = await FirebaseFirestore.instance
-      .collection('favorites')
-      .doc(userId)
-      .get();
-
-  if (querySnapshot.exists) {
-    final data = querySnapshot.data()!;
-    return data.containsKey(url);
+        },
+        SetOptions(
+            merge:
+                true)); // Use merge option to avoid overwriting existing data
+    setState(() {});
   }
 
-  return false;
-}
+  Future<bool> isFavorite(String url) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(userId)
+        .get();
+    if (querySnapshot.exists) {
+      final data = querySnapshot.data()!;
+      return data.containsKey(url);
+    }
+    return false;
+  }
+   Widget _buildImage(String imageUrl) {
+    return Image.network(
+      imageUrl,
+      width: 80,
+      height: 80,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Placeholder(); // Placeholder widget to show when image fails to load
+      },
+    );
+  }
   @override
   void initState() {
     super.initState();
@@ -133,7 +138,7 @@ Future<bool> isFavorite(String url) async {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           final isFavorite = snapshot.data ?? false;
-                          return Card(
+                          return  Card(
                             elevation: 3,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -149,10 +154,7 @@ Future<bool> isFavorite(String url) async {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(10)),
-                                        child: Image.network(
-                                          x.image.toString(),
-                                          fit: BoxFit.cover,
-                                        ),
+                                        child: _buildImage(x.image.toString()),
                                       ),
                                     ),
                                     Expanded(
