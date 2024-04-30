@@ -69,14 +69,21 @@ Future<void> addToFavorites(
     }
     return false;
   }
-   Widget _buildImage(String imageUrl) {
+     Widget buildImage(String imageUrl) {
     return Image.network(
       imageUrl,
       width: 80,
       height: 80,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
-        return Placeholder(); // Placeholder widget to show when image fails to load
+        return  Placeholder(
+          color: Colors.red,
+          fallbackWidth: 80,
+          fallbackHeight: 80,
+          child: Center(
+            child: Text("Image is too slow to show"),
+          ),
+        );// Placeholder widget to show when image fails to load
       },
     );
   }
@@ -154,7 +161,7 @@ Future<void> addToFavorites(
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(10)),
-                                        child: _buildImage(x.image.toString()),
+                                        child: buildImage(x.image.toString()),
                                       ),
                                     ),
                                     Expanded(

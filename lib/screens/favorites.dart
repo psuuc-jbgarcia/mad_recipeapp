@@ -72,9 +72,13 @@ class _FavoritesState extends State<Favorites> {
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(8),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: _buildImage(imageUrl),
+                    leading: SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: buildImage(imageUrl),
+                      ),
                     ),
                     title: Text(
                       label,
@@ -98,6 +102,7 @@ class _FavoritesState extends State<Favorites> {
                       icon: Icon(Icons.remove_circle),
                       onPressed: () {
                         removeFavorite(label);
+                        print(label);
                       },
                     ),
                   ),
@@ -118,31 +123,48 @@ class _FavoritesState extends State<Favorites> {
         .snapshots();
   }
 
-  Widget _buildImage(String imageUrl) {
+  Widget buildImage(String imageUrl) {
     return Image.network(
       imageUrl,
       width: 80,
       height: 80,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
-        return Placeholder(); // Placeholder widget to show when image fails to load
+        return  Placeholder(
+          color: Colors.red,
+          fallbackWidth: 80,
+          fallbackHeight: 80,
+          child: Center(
+            child: Text("Image is too slow to show"),
+          ),
+        );// Placeholder widget to show when image fails to load
       },
     );
   }
+void removeFavorite(String label) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final favoritesRef = FirebaseFirestore.instance.collection('favorites');
 
-  void removeFavorite(String label) {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    FirebaseFirestore.instance.collection('favorites').doc(userId).update({
-      label: FieldValue.delete(),
-    }).then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Removed from favorites: $label')),
-      );
-      setState(() {});
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to remove from favorites: $error')),
-      );
-    });
+  final querySnapshot = await favoritesRef
+      .where('userId', isEqualTo: userId)
+      .where('label', isEqualTo: label)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    final favoriteDoc = querySnapshot.docs.first;
+    await favoriteDoc.reference.delete();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Removed favorite')),
+    );
+    setState(() {});
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Favorite not found')),
+    );
   }
+}
+
+
+
+
 }

@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pantrychef/screens/favorites.dart';
 import 'package:pantrychef/screens/home.dart';
 import 'package:pantrychef/screens/login.dart';
+import 'package:pantrychef/screens/profile.dart';
 
 const Color primaryColor = Colors.redAccent; // Appetizing red
 const Color secondaryColor = Colors.lightGreenAccent; // Fresh green
@@ -54,6 +55,10 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.favorite, color: primaryColor),
           ),
           ListTile(
+            onTap: () {
+                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>AccountScreen()));
+
+            },
             title: Text('Profile'),
             leading: Icon(Icons.person, color: primaryColor),
          
