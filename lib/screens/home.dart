@@ -24,10 +24,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Recipe> list = <Recipe>[];
   String? search;
+    String? message;
+
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
-  //10 results
+  //20 results
   final url =
-      "https://api.edamam.com/search?q=&app_id=1a08c259&app_key=344a22a6d97e805580ee27a597df263c&from=0&to=10&calories=591-722&health=alcohol-free";
+      "https://api.edamam.com/search?q=&app_id=1a08c259&app_key=344a22a6d97e805580ee27a597df263c&from=0&to=20&calories=591-722&health=alcohol-free";
   getApiData() async {
     var response = await http.get(Uri.parse(url));
     Map json = jsonDecode(response.body);
@@ -107,6 +109,7 @@ class _HomeState extends State<Home> {
           textAlign: TextAlign.center,
         ),
         backgroundColor: primaryColor,
+          iconTheme: IconThemeData(color: Colors.white), 
       ),
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
@@ -123,7 +126,7 @@ class _HomeState extends State<Home> {
                     search = value;
                   },
                   decoration: InputDecoration(
-                    hintText: "Search For Recipe",
+                    hintText:"Search For Recipe",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -131,11 +134,21 @@ class _HomeState extends State<Home> {
                     filled: true,
                     suffixIcon: IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => Search(search: search)),
-                        );
+                  if (search!.isEmpty) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("Please enter  ingredient name."),
+    ),
+  );
+} else {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => Search(search: search),
+    ),
+  );
+}
+
                       },
                       icon: Icon(Icons.search),
                     ),

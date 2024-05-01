@@ -105,6 +105,8 @@ Future<void> addToFavorites(
             textAlign: TextAlign.center,
           ),
           backgroundColor: primaryColor,
+                    iconTheme: IconThemeData(color: Colors.white), 
+
       ),
       body:SingleChildScrollView(
         child: Padding(
@@ -225,6 +227,13 @@ Future<void> addToFavorites(
                   );
                 },
               ),
+                if (list.isEmpty)
+                Center(
+                  child: Text(
+                    "No recipes found",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
             ],
           ),
         ),

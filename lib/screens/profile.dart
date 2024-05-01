@@ -7,77 +7,115 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser!.uid;
-const Color primaryColor = Colors.redAccent; // Appetizing red
+    const Color primaryColor = Color(0xFFD32F2F); // Dark Red
+    const Color accentColor = Color(0xFFFFAB91); // Light Orange
+    const Color backgroundColor = Color(0xFFFBE9E7); // Light Peach
 
     return Scaffold(
       drawer: CustomDrawer(),
       appBar: AppBar(
-   centerTitle: true,
+        centerTitle: true,
         title: Text(
           "My Account",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: primaryColor,      ),
-      body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance.collection('account').doc(userId).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            final data = snapshot.data?.data();
-            if (data == null || data.isEmpty) {
-              return Center(
-                child: Text('No data found'),
-              );
-            } else {
-              final dietaryPreference = data['dietary_preference'] ?? 'Not found';
-              final fname = data['fname'] ?? 'Not found';
+        backgroundColor: primaryColor,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance.collection('account').doc(userId).snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final data = snapshot.data?.data();
+                  if (data == null || data.isEmpty) {
+                    return Text('No data found');
+                  } else {
+                    final dietaryPreference = data['dietary_preference'] ?? 'Not found';
+                    final fname = data['fname'] ?? 'Not found';
 
-              return Center(
-                child: Card(
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CircleAvatar(
                           backgroundImage: NetworkImage('https://via.placeholder.com/150'),
                           radius: 50,
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Dietary Preference: $dietaryPreference',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        Card(
+                          elevation: 3,
+                          color: backgroundColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Dietary Preference',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  dietaryPreference,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 10),
-                        Text(
-                          'First Name: $fname',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        SizedBox(height: 20),
+                        Card(
+                          elevation: 3,
+                          color: backgroundColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'First Name',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  fname,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
-                    ),
-                  ),
-                ),
-              );
-            }
-          }
-        },
+                    );
+                  }
+                }
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
