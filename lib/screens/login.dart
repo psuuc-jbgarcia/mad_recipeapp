@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pantrychef/screens/home.dart';
 import 'package:pantrychef/screens/register.dart';
@@ -127,24 +128,39 @@ Future<void> signInWithGoogle() async {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // App logo with primary color background
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: primaryColor,
-                ),
-                child: Center(
-                  child: Text(
-                    'Your Logo',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // White text for better contrast
-                    ),
-                  ),
-                ),
-              ),
+          Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+  Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+  Icon(
+    FontAwesomeIcons.utensils,
+    size: 100,
+    color: primaryColor,
+  ),
+  SizedBox(height: 10), // Spacer between icon and slogan
+  Text(
+    'PantryChef',
+    style: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: primaryColor,
+    ),
+  ),
+  Text(
+    'Cooking Made Easy',
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.grey[600],
+    ),
+  ),
+  ],
+),
+
+  ],
+),
+
               SizedBox(height: 30.0),
               TextFormField(
                 controller: email,

@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:pantrychef/screens/splash2.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 const Color primaryColor = Colors.redAccent; // Appetizing red
 
@@ -16,23 +16,23 @@ class SplashScreen extends StatelessWidget {
     });
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Stack(
         children: [
           // Background image
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/splash_background.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          
           Scaffold(
             backgroundColor: Colors.transparent,
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Icon(
+                    FontAwesomeIcons.shoppingBasket,
+                    size: 80,
+                    color: primaryColor,
+                  ),
+                  SizedBox(height: 20),
                   Text(
                     'Welcome to',
                     style: TextStyle(
@@ -41,7 +41,6 @@ class SplashScreen extends StatelessWidget {
                       color: primaryColor,
                     ),
                   ),
-                  SizedBox(height: 10),
                   Text(
                     'PantryChef',
                     style: TextStyle(

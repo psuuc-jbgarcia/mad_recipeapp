@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pantrychef/screens/login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 const Color primaryColor = Colors.redAccent; // Appetizing red
 const Color secondaryColor = Colors.lightGreenAccent; // Fresh green
@@ -14,6 +15,12 @@ class SecondSplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Icon(
+                FontAwesomeIcons.utensils,
+                size: 80,
+                color: primaryColor,
+              ),
+              SizedBox(height: 20),
               Text(
                 'Welcome to PantryChef!',
                 style: TextStyle(
@@ -26,7 +33,7 @@ class SecondSplashScreen extends StatelessWidget {
               Text(
                 'PantryChef helps you find and save your favorite recipes.\n\n'
                 'To get started, use the search feature to find recipes based on your ingredients. '
-                'You can also explore different categories of recipes and save your favorites for quick access later.',
+                'Also you can save your favorites for quick access later.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
